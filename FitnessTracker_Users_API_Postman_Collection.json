@@ -1,0 +1,218 @@
+{
+  "info": {
+    "name": "FitnessTracker Users API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get all users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get simple users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users/simple",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "simple"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get user by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get user by email (exact match)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users/email?email=test@example.com",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "email"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "test@example.com"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get users by email fragment",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users/email/fragment?email=gmail",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "email",
+            "fragment"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "gmail"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get users older than date",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users/older/2000-01-01",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "older",
+            "2000-01-01"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create user",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Mike\",\n  \"lastName\": \"Scott\",\n  \"birthdate\": \"1999-09-29\",\n  \"email\": \"mike.scott@domain.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8091/v1/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete user by ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8091/v1/users/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update user by ID",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"birthdate\": \"1980-01-01\",\n  \"email\": \"john.doe@example.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8091/v1/users/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8091",
+          "path": [
+            "v1",
+            "users",
+            "1"
+          ]
+        }
+      }
+    }
+  ]
+}

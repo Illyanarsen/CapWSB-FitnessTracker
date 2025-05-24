@@ -9,6 +9,10 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
+/**
+ * Encja reprezentująca użytkownika systemu FitnessTracker.
+ * Przechowuje podstawowe dane osobowe i identyfikacyjne.
+ */
 @Entity
 @Table(name = "users")
 @Getter
@@ -33,6 +37,15 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    /**
+     * Konstruktor tworzący nowego użytkownika (do zapisu w bazie).
+     * Nie powinien zawierać ID – ID generuje się automatycznie.
+     *
+     * @param firstName imię
+     * @param lastName nazwisko
+     * @param birthdate data urodzenia
+     * @param email adres e-mail
+     */
     public User(
             final String firstName,
             final String lastName,
@@ -43,7 +56,39 @@ public class User {
         this.lastName = lastName;
         this.birthdate = birthdate;
         this.email = email;
+
+        }
+
+    /**
+     * Konstruktor pomocniczy wykorzystywany m.in. przy aktualizacji danych,
+     * kiedy zachodzi potrzeba ustawienia ID użytkownika.
+     *
+     * @param firstName imię
+     * @param lastName nazwisko
+     * @param birthdate data urodzenia
+     * @param email adres e-mail
+     * @param id identyfikator użytkownika
+     */
+    public User(String firstName, String lastName, LocalDate birthdate, String email, Long id) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.email = email;
+        this.id = id;
     }
 
+    /**
+     * Tworzy nową instancję użytkownika zaktualizowaną o nowe dane,
+     * zachowując to samo ID. Stosowane przy aktualizacji danych.
+     *
+     * @param firstName nowe imię
+     * @param lastName nowe nazwisko
+     * @param birthdate nowa data urodzenia
+     * @param email nowy adres e-mail
+     * @return nowy obiekt {@link User} z aktualnymi danymi
+     */
+    public User update(String firstName, String lastName, LocalDate birthdate, String email) {
+        return new User(firstName, lastName, birthdate, email, this.getId());
+    }
 }
 

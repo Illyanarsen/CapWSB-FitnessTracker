@@ -93,15 +93,21 @@ class UserApiIntegrationTest extends IntegrationTestBase {
 
     @Test
     void shouldReturnDetailsAboutUser_whenGettingUserByEmail() throws Exception {
-        User user1 = existingUser(generateUser());
+        User user = existingUser(generateUser());
 
-        mockMvc.perform(get("/v1/users/email").param("email", user1.getEmail()).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users/email")
+                        .param("email", user.getEmail())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(user1.getId().intValue()))
-                .andExpect(jsonPath("$[0].email").value(user1.getEmail()));
+                // Oczekujemy obiektu a nie listy (bo email jest unikalny), więc sprawdzamy pola obiektu, a nie tablicę
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.birthdate").value(user.getBirthdate().toString()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()));
     }
+
 
     @Test
     void shouldReturnAllUsersOlderThan_whenGettingAllUsersOlderThan() throws Exception {
@@ -209,6 +215,43 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         assertThat(user.getLastName()).isEqualTo(USER_LAST_NAME);
         assertThat(user.getBirthdate()).isEqualTo(LocalDate.parse(USER_BIRTHDATE));
         assertThat(user.getEmail()).isEqualTo(USER_EMAIL);
+    }
+
+    @Test
+    void shouldReturnUsersMatchingEmailFragment_whenSearchingByEmail() throws Exception {
+        User user1 = existingUser(new User("Alice", "Smith", LocalDate.of(1990, 1, 1), "alice@example.com"));
+        User user2 = existingUser(new User("Bob", "Jones", LocalDate.of(1985, 5, 5), "bob123@gmail.com"));
+        existingUser(new User("Charlie", "Brown", LocalDate.of(1980, 3, 3), "charlie@yahoo.com"));
+
+        mockMvc.perform(get("/v1/users/email/fragment")
+                        .param("email", "gmail")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(log())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].email").value(user2.getEmail()))
+                .andExpect(jsonPath("$[1]").doesNotExist());
+    }
+
+    @Test
+    void shouldReturnNotFound_whenGettingNonExistingUserById() throws Exception {
+        mockMvc.perform(get("/v1/users/{id}", 999L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(log())
+                .andExpect(status().isOk()) //bo zwracamy optional
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    void shouldReturnEmptyList_whenEmailFragmentDoesNotMatchAnyUser() throws Exception {
+        existingUser(new User("Alice", "Smith", LocalDate.of(1990, 1, 1), "alice@example.com"));
+
+        mockMvc.perform(get("/v1/users/email/fragment")
+                        .param("email", "nonexistingfragment")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(log())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
 
